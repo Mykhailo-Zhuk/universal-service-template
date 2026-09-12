@@ -1,101 +1,154 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  QrCode,
+  CalendarDays,
+  CreditCard,
+  Bot,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+
+const features = [
+  {
+    icon: QrCode,
+    title: "QR Menu",
+    description:
+      "Beautiful digital menus accessible via QR code. Edit items, prices and availability in seconds.",
+    href: "/menu/demo-restaurant",
+    color: "from-indigo-500 to-violet-500",
+  },
+  {
+    icon: CalendarDays,
+    title: "Online Booking",
+    description:
+      "Self-service booking flow for any service. Real-time slot picking and instant confirmation.",
+    href: "/book/haircut-classic",
+    color: "from-emerald-500 to-teal-500",
+  },
+  {
+    icon: CreditCard,
+    title: "Payments",
+    description:
+      "LiqPay and MonoPay integrations built-in. Test the full flow with mock data.",
+    href: "/admin",
+    color: "from-amber-500 to-orange-500",
+  },
+  {
+    icon: Bot,
+    title: "Telegram Bot",
+    description:
+      "Webhook-driven bot ready to connect to your Telegram account. Send commands and log activity.",
+    href: "/admin",
+    color: "from-sky-500 to-blue-500",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent dark:from-indigo-900/20" />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+        <Link href="/" className="flex items-center gap-2 font-semibold">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          <span>Universal Service Template</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button asChild size="sm">
+            <Link href="/admin">Admin</Link>
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </header>
+
+      <section className="relative z-10 mx-auto max-w-6xl px-6 pt-16 pb-24 text-center sm:pt-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300">
+            <Sparkles className="h-3 w-3" />
+            Next.js 14 · TypeScript · Tailwind · Zod
+          </div>
+          <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-6xl">
+            One template.
+            <br />
+            <span className="gradient-text">Any service business.</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
+            A clean, fast and customizable foundation for restaurants, salons,
+            clinics, barbershops and any appointment-based business. QR menu,
+            online booking, payments and a Telegram bot — all wired up and
+            ready to adapt.
+          </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <Button asChild size="lg">
+              <Link href="/menu/demo-restaurant">
+                View Demo Menu
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/admin">Open Admin Panel</Link>
+            </Button>
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="relative z-10 mx-auto max-w-6xl px-6 pb-24">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {features.map((feature, idx) => {
+            const Icon = feature.icon;
+            return (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+              >
+                <Link
+                  href={feature.href}
+                  className="group block h-full rounded-xl border border-zinc-200 bg-white p-6 transition-all hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
+                >
+                  <div
+                    className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${feature.color} text-white`}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 group-hover:gap-2 transition-all dark:text-indigo-400">
+                    Open
+                    <ArrowRight className="h-3 w-3" />
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      <footer className="relative z-10 border-t border-zinc-200 py-8 text-center text-sm text-muted-foreground dark:border-zinc-800">
+        <div className="mx-auto max-w-6xl px-6">
+          Built with Next.js 14 · MIT License ·{" "}
+          <Link
+            href="https://github.com/Mykhailo-Zhuk/universal-service-template"
+            className="text-indigo-600 hover:underline dark:text-indigo-400"
+          >
+            View on GitHub
+          </Link>
+        </div>
       </footer>
-    </div>
+    </main>
   );
 }
