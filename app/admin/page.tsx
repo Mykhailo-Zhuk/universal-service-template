@@ -4,243 +4,446 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Activity,
-  Bot,
-  CalendarDays,
-  CreditCard,
+  ShoppingBag,
+  TrendingUp,
+  CalendarCheck2,
+  Receipt,
   ExternalLink,
-  Info,
-  AlertTriangle,
-  CheckCircle2,
-  QrCode,
+  ChevronRight,
+  Sparkles,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { formatPrice, cn } from "@/lib/utils";
+import {
+  ORDER_STATUS_META,
+  relativeTime,
+  timeOfDay,
+} from "@/lib/admin-helpers";
+import type { Order } from "@/lib/schemas";
 
-type LogEntry = {
-  id: string;
-  timestamp: string;
-  level: "info" | "success" | "warning" | "error";
-  message: string;
+type DashboardData = {
+  ordersToday: number;
+  ordersYesterday: number;
+  revenueToday: number;
+  revenueYesterday: number;
+  avgCheckToday: number;
+  activeBookings: number;
+  lastOrders: Order[];
+  popularItems: Array<{
+    id: string;
+    name: string;
+    quantity: number;
+    revenue: number;
+  }>;
+  weeklySeries: Array<{
+    date: string;
+    label: string;
+    orders: number;
+    revenue: number;
+  }>;
 };
 
-const LOG_ICON = {
-  info: Info,
-  success: CheckCircle2,
-  warning: AlertTriangle,
-  error: AlertTriangle,
-};
-
-const LOG_COLOR = {
-  info: "text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40",
-  success:
-    "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40",
-  warning:
-    "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40",
-  error: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40",
-};
-
-const STATS = [
-  {
-    label: "Total Bookings",
-    value: "127",
-    change: "+12%",
-    icon: CalendarDays,
-    href: "/admin",
-  },
-  {
-    label: "Revenue (month)",
-    value: "₴48,200",
-    change: "+8%",
-    icon: CreditCard,
-    href: "/admin",
-  },
-  {
-    label: "Bot Messages",
-    value: "342",
-    change: "+24%",
-    icon: Bot,
-    href: "/admin",
-  },
-  {
-    label: "Active Items",
-    value: "23 / 24",
-    change: "96%",
-    icon: QrCode,
-    href: "/menu/demo-restaurant",
-  },
-];
-
-export default function AdminPage() {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
+export default function AdminDashboardPage() {
+  const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     async function load() {
       try {
-        const res = await fetch("/api/bot/log");
-        if (!res.ok) throw new Error("Failed to load logs");
-        const data = await res.json();
-        setLogs(data.logs);
+        const res = await fetch("/api/admin/dashboard");
+        if (!res.ok) throw new Error("Failed to load dashboard");
+        const json = (await res.json()) as DashboardData;
+        if (!cancelled) setData(json);
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     load();
-    const interval = setInterval(load, 10000);
-    return () => clearInterval(interval);
+    const interval = setInterval(load, 15_000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, []);
 
+  const stats: Array<{
+    label: string;
+    value: string;
+    delta?: { value: number; suffix: string };
+    icon: typeof ShoppingBag;
+    href: string;
+  }> = data
+    ? [
+        {
+          label: "Orders today",
+          value: data.ordersToday.toString(),
+          delta:
+            data.ordersYesterday > 0
+              ? {
+                  value:
+                    ((data.ordersToday - data.ordersYesterday) /
+                      data.ordersYesterday) *
+                    100,
+                  suffix: "%",
+                }
+              : undefined,
+          icon: ShoppingBag,
+          href: "/admin/orders",
+        },
+        {
+          label: "Revenue today",
+          value: formatPrice(data.revenueToday),
+          delta:
+            data.revenueYesterday > 0
+              ? {
+                  value:
+                    ((data.revenueToday - data.revenueYesterday) /
+                      data.revenueYesterday) *
+                    100,
+                  suffix: "%",
+                }
+              : undefined,
+          icon: TrendingUp,
+          href: "/admin/orders",
+        },
+        {
+          label: "Active bookings",
+          value: data.activeBookings.toString(),
+          icon: CalendarCheck2,
+          href: "/admin/bookings",
+        },
+        {
+          label: "Avg check",
+          value: formatPrice(data.avgCheckToday),
+          icon: Receipt,
+          href: "/admin/orders",
+        },
+      ]
+    : [];
+
+  if (loading || !data) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 border-t-indigo-600" />
+      </div>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white">
-              <Activity className="h-4 w-4" />
-            </div>
-            Admin Panel
-          </Link>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href="/">Home</Link>
-            </Button>
-          </div>
-        </div>
+    <div className="space-y-6">
+      <header>
+        <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
+          Dashboard
+        </h1>
+        <p className="mt-1 text-muted-foreground">
+          Real-time overview of your service business. Auto-refreshes every
+          15 seconds.
+        </p>
       </header>
 
-      <section className="mx-auto max-w-6xl px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p className="mt-1 text-muted-foreground">
-              Real-time overview of your service business.
-            </p>
-          </div>
-
-          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {STATS.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.05 }}
-                >
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            {stat.label}
-                          </p>
-                          <p className="mt-2 text-2xl font-bold tabular-nums">
-                            {stat.value}
-                          </p>
-                          <Badge variant="success" className="mt-2">
-                            {stat.change}
-                          </Badge>
-                        </div>
-                        <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
-                          <Icon className="h-5 w-5" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>
-                  Latest events from bookings, payments and the bot. Auto-refreshes every 10s.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-300 border-t-indigo-600" />
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {logs.map((log) => {
-                      const Icon = LOG_ICON[log.level];
-                      return (
-                        <div
-                          key={log.id}
-                          className="flex items-start gap-3 rounded-md border border-zinc-100 p-3 dark:border-zinc-800"
-                        >
-                          <div
-                            className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${LOG_COLOR[log.level]}`}
+      {/* KPI cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat, idx) => {
+          const Icon = stat.icon;
+          const deltaPositive =
+            stat.delta && stat.delta.value >= 0;
+          return (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+            >
+              <Link href={stat.href}>
+                <Card className="transition-all hover:border-indigo-300 hover:shadow-md">
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm text-muted-foreground">
+                          {stat.label}
+                        </p>
+                        <p className="mt-2 text-2xl font-bold tabular-nums">
+                          {stat.value}
+                        </p>
+                        {stat.delta && (
+                          <Badge
+                            variant={deltaPositive ? "success" : "warning"}
+                            className="mt-2"
                           >
-                            <Icon className="h-3.5 w-3.5" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm">{log.message}</p>
-                            <p className="mt-0.5 font-mono text-xs text-muted-foreground">
-                              {new Date(log.timestamp).toLocaleString()}
-                            </p>
-                          </div>
-                          <Badge variant="outline" className="shrink-0 text-xs">
-                            {log.level}
+                            {deltaPositive ? "▲" : "▼"}{" "}
+                            {Math.abs(stat.delta.value).toFixed(0)}
+                            {stat.delta.suffix}
                           </Badge>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                        )}
+                      </div>
+                      <div className="rounded-lg bg-indigo-50 p-2.5 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Links</CardTitle>
-                <CardDescription>Jump to any section.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button asChild variant="outline" className="w-full justify-between">
-                  <Link href="/menu/demo-restaurant">
-                    Demo QR Menu
-                    <ExternalLink className="h-3.5 w-3.5" />
+      <div className="grid gap-4 lg:grid-cols-3">
+        {/* Weekly chart */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Orders this week</CardTitle>
+            <CardDescription>
+              Order count and revenue per day, last 7 days.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <WeeklyChart series={data.weeklySeries} />
+          </CardContent>
+        </Card>
+
+        {/* Popular items */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              Popular items
+            </CardTitle>
+            <CardDescription>
+              Top sellers across all paid orders.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {data.popularItems.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No paid orders yet.
+              </p>
+            ) : (
+              <ol className="space-y-3">
+                {data.popularItems.map((item, idx) => (
+                  <li key={item.id} className="flex items-center gap-3">
+                    <span
+                      className={cn(
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                        idx === 0
+                          ? "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300"
+                          : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                      )}
+                    >
+                      {idx + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium">
+                        {item.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {item.quantity} sold • {formatPrice(item.revenue)}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        {/* Last orders */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <div>
+              <CardTitle>Latest orders</CardTitle>
+              <CardDescription>
+                Five most recent orders across all tables.
+              </CardDescription>
+            </div>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/admin/orders">
+                See all
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              {data.lastOrders.map((order) => {
+                const meta = ORDER_STATUS_META[order.status];
+                return (
+                  <Link
+                    key={order.id}
+                    href="/admin/orders"
+                    className="flex items-center gap-3 py-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {order.tableLabel ?? `Table #${order.tableId}`}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          • {order.customerName}
+                        </span>
+                      </div>
+                      <div className="mt-0.5 text-xs text-muted-foreground">
+                        {order.items.length} item
+                        {order.items.length === 1 ? "" : "s"} •{" "}
+                        {relativeTime(order.createdAt)} •{" "}
+                        {timeOfDay(order.createdAt)}
+                      </div>
+                    </div>
+                    <span
+                      className={cn(
+                        "shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold",
+                        meta.tone
+                      )}
+                    >
+                      {meta.label}
+                    </span>
+                    <span className="shrink-0 text-sm font-semibold tabular-nums">
+                      {formatPrice(order.total)}
+                    </span>
                   </Link>
-                </Button>
-                <Button asChild variant="outline" className="w-full justify-between">
-                  <Link href="/book/haircut-classic">
-                    Demo Booking Flow
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="w-full justify-between">
-                  <Link href="/api/menu/demo-restaurant">
-                    Menu API JSON
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="w-full justify-between">
-                  <Link href="/api/bot/log">
-                    Bot Log API
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </motion.div>
-      </section>
-    </main>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick links */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick links</CardTitle>
+            <CardDescription>Jump to the most-used views.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button
+              asChild
+              variant="outline"
+              className="w-full justify-between"
+            >
+              <Link href="/admin/orders">
+                Orders dashboard
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="w-full justify-between"
+            >
+              <Link href="/admin/menu">
+                Manage menu
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="w-full justify-between"
+            >
+              <Link href="/admin/bookings">
+                Bookings
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="w-full justify-between"
+            >
+              <Link href="/menu/demo-restaurant/table/5">
+                Test QR flow (Table #5)
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Tiny SVG bar-chart, no external chart lib needed.
+ * Scales bars relative to the maximum value in the series.
+ */
+function WeeklyChart({
+  series,
+}: {
+  series: DashboardData["weeklySeries"];
+}) {
+  const maxOrders = Math.max(1, ...series.map((d) => d.orders));
+  const maxRevenue = Math.max(1, ...series.map((d) => d.revenue));
+
+  return (
+    <div className="space-y-3">
+      <div className="flex h-40 items-end gap-2 sm:gap-3">
+        {series.map((d) => {
+          const ordersHeight = (d.orders / maxOrders) * 100;
+          const revenueHeight = (d.revenue / maxRevenue) * 100;
+          const isToday =
+            d.date === new Date().toISOString().slice(0, 10);
+          return (
+            <div
+              key={d.date}
+              className="group flex flex-1 flex-col items-center gap-1"
+            >
+              <div className="relative flex h-full items-end gap-1">
+                <div
+                  className={cn(
+                    "w-3 rounded-t-md transition-all sm:w-4",
+                    isToday
+                      ? "bg-indigo-500"
+                      : "bg-indigo-300 dark:bg-indigo-700"
+                  )}
+                  style={{ height: `${Math.max(ordersHeight, 2)}%` }}
+                  title={`${d.orders} orders`}
+                />
+                <div
+                  className={cn(
+                    "w-3 rounded-t-md transition-all sm:w-4",
+                    isToday
+                      ? "bg-emerald-500"
+                      : "bg-emerald-300 dark:bg-emerald-700"
+                  )}
+                  style={{ height: `${Math.max(revenueHeight, 2)}%` }}
+                  title={`${d.revenue} UAH`}
+                />
+              </div>
+              <div
+                className={cn(
+                  "text-xs",
+                  isToday
+                    ? "font-semibold text-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                {d.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-indigo-500" /> Orders
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-emerald-500" /> Revenue
+        </span>
+        <span className="ml-auto">Today highlighted</span>
+      </div>
+    </div>
   );
 }
