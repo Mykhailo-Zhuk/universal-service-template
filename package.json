@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^13.2.0",
     "lucide-react": "^1.45.0",
     "next": "14.2.35",
     "next-intl": "^4.14.4",
+    "qrcode.react": "^4.2.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.88.0",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.6.2"
   },

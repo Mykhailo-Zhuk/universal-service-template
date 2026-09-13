@@ -288,7 +288,7 @@ export default function AdminMenuPage() {
                         <UtensilsCrossed className="mx-auto h-8 w-8" />
                         <p className="mt-2 font-medium">No items yet</p>
                         <p className="mt-1 text-xs">
-                          Click "Add item" to create your first menu item.
+                          Click &ldquo;Add item&rdquo; to create your first menu item.
                         </p>
                       </td>
                     </tr>
@@ -557,4 +557,5 @@ function Field({
 }
 
 // Suppress unused warning
-export const _internal = { CircleX };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _internal = { CircleX };

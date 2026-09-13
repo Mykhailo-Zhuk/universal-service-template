@@ -7,7 +7,6 @@ import {
   Clock,
   Phone,
   Hash,
-  CreditCard,
   Loader2,
   Volume2,
   VolumeX,
@@ -61,7 +60,6 @@ export default function AdminOrdersPage() {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const lastSeenIdsRef = useRef<Set<string>>(new Set());
-  const audioCtxRef = useRef<AudioContext | null>(null);
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -399,7 +397,7 @@ function OrderCard({
                     )}
                     {item.notes && (
                       <div className="mt-0.5 text-xs italic text-muted-foreground">
-                        "{item.notes}"
+                        &ldquo;{item.notes}&rdquo;
                       </div>
                     )}
                   </div>
@@ -483,16 +481,12 @@ function OrderCard({
  */
 function playBeep() {
   try {
-    if (!audioCtxRef.current) {
-      const Ctx =
-        window.AudioContext ||
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).webkitAudioContext;
-      if (!Ctx) return;
-      audioCtxRef.current = new Ctx();
-    }
-    const ctx = audioCtxRef.current;
-    if (!ctx) return;
+    const Ctx =
+      window.AudioContext ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "sine";

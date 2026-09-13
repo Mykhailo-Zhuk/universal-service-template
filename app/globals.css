@@ -80,3 +80,27 @@ body {
     background: rgba(10, 10, 10, 0.7);
   }
 }
+
+/* ── Print layout for /admin/tables (G-262) ─────────────────────── */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  /* Drop the sidebar, header and any controls marked .print:hidden. */
+  .print\:hidden,
+  aside,
+  header.sticky,
+  main > header {
+    display: none !important;
+  }
+  /* Reset card sizing for print — show 3 per row on A4. */
+  .grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6mm !important;
+  }
+}

@@ -9,6 +9,7 @@ import {
   UtensilsCrossed,
   FolderTree,
   CalendarCheck2,
+  QrCode,
   Settings,
   X,
 } from "lucide-react";
@@ -52,6 +53,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Bookings",
     icon: CalendarCheck2,
     match: (p) => p.startsWith("/admin/bookings"),
+  },
+  {
+    href: "/admin/tables",
+    label: "Tables & QR",
+    icon: QrCode,
+    match: (p) => p.startsWith("/admin/tables"),
   },
   {
     href: "/admin/settings",
