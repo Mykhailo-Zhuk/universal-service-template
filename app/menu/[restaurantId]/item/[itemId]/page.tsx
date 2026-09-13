@@ -163,7 +163,7 @@ export default function ItemDetailPage({ params }: Props) {
           <ThemeToggle />
         </div>
 
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center justify-center px-4 pb-16 pt-6 text-center sm:pb-20 sm:pt-10">
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center justify-center px-4 pb-20 pt-6 text-center sm:pb-28 sm:pt-10">
           <motion.div
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -203,11 +203,11 @@ export default function ItemDetailPage({ params }: Props) {
       </motion.section>
 
       {/* Quick facts */}
-      <section className="mx-auto -mt-8 max-w-3xl px-4">
+      <section className="relative z-10 mx-auto max-w-3xl px-4 pt-8 sm:pt-12">
         <motion.div
           initial={{ y: 16, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.35 }}
+          transition={{ delay: 0.35, duration: 0.4 }}
           className="grid grid-cols-3 gap-2 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
         >
           {item.weight && (
