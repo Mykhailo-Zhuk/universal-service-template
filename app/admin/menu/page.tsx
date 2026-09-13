@@ -316,7 +316,7 @@ export default function AdminMenuPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="w-full max-w-2xl"
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <Card>
