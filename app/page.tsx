@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   QrCode,
@@ -11,38 +12,38 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+
+const ThemeToggle = dynamic(
+  () => import("@/components/theme-toggle").then((m) => m.ThemeToggle),
+  { ssr: false }
+);
 
 const features = [
   {
     icon: QrCode,
     title: "QR Menu",
-    description:
-      "Beautiful digital menus accessible via QR code. Edit items, prices and availability in seconds.",
+    description: "Beautiful digital menus accessible via QR code. Edit items, prices and availability in seconds.",
     href: "/menu/demo-restaurant",
     color: "from-indigo-500 to-violet-500",
   },
   {
     icon: CalendarDays,
     title: "Online Booking",
-    description:
-      "Self-service booking flow for any service. Real-time slot picking and instant confirmation.",
+    description: "Self-service booking flow for any service. Real-time slot picking and instant confirmation.",
     href: "/book/haircut-classic",
     color: "from-emerald-500 to-teal-500",
   },
   {
     icon: CreditCard,
     title: "Payments",
-    description:
-      "LiqPay and MonoPay integrations built-in. Test the full flow with mock data.",
+    description: "LiqPay and MonoPay integrations built-in. Test the full flow with mock data.",
     href: "/admin",
     color: "from-amber-500 to-orange-500",
   },
   {
     icon: Bot,
     title: "Telegram Bot",
-    description:
-      "Webhook-driven bot ready to connect to your Telegram account. Send commands and log activity.",
+    description: "Webhook-driven bot ready to connect to your Telegram account. Send commands and log activity.",
     href: "/admin",
     color: "from-sky-500 to-blue-500",
   },
@@ -84,10 +85,7 @@ export default function Home() {
             <span className="gradient-text">Any service business.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-            A clean, fast and customizable foundation for restaurants, salons,
-            clinics, barbershops and any appointment-based business. QR menu,
-            online booking, payments and a Telegram bot — all wired up and
-            ready to adapt.
+            A clean, fast and customizable foundation for restaurants, salons, clinics, barbershops and any appointment-based business. QR menu, online booking, payments and a Telegram bot — all wired up and ready to adapt.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg">
@@ -124,9 +122,7 @@ export default function Home() {
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                   <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 group-hover:gap-2 transition-all dark:text-indigo-400">
                     Open
                     <ArrowRight className="h-3 w-3" />
