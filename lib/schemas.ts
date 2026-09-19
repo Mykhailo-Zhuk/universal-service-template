@@ -126,7 +126,7 @@ export const BookingSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD"),
   time: z.string().regex(/^\d{2}:\d{2}$/, "Time must be HH:MM"),
   notes: z.string().max(500).optional(),
-  locale: z.enum(["uk", "en", "ru"]).default("uk"),
+  locale: z.enum(["uk", "en"]).default("uk"),
 });
 
 export const PaymentCreateSchema = z.object({

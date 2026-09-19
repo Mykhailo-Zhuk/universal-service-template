@@ -9,7 +9,7 @@
 - 💳 **Оплата через QR** — інтеграція з LiqPay/MonoPay
 - 👨‍💼 **Адмін-панель** — управління закладом або мережею
 - 🤖 **Telegram-бот** — сповіщення адміну
-- 🌐 **Багатомовність** (UA / EN / RU) — готова інфраструктура
+- 🌐 **Багатомовність** (UA / EN) — готова інфраструктура
 - 🎨 **Дизайн у стилі Linear** — чистий, мінімалістичний
 - 📱 **Mobile-first** + Dark/light theme
 
@@ -29,7 +29,7 @@
 - **Animations:** framer-motion
 - **Validation:** Zod
 - **Icons:** Lucide React
-- **i18n:** next-intl (UA/EN/RU)
+- **i18n:** next-intl (UA/EN)
 - **Deployment:** Vercel
 
 ## 📦 Встановлення
