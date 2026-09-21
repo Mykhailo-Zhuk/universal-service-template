@@ -7,10 +7,11 @@ import {
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const idx = DEMO_RESTAURANT.categories.findIndex(
-    (c) => c.id === params.id
+    (c) => c.id === id
   );
   if (idx === -1) {
     return NextResponse.json(
@@ -50,10 +51,11 @@ export async function PATCH(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const idx = DEMO_RESTAURANT.categories.findIndex(
-    (c) => c.id === params.id
+    (c) => c.id === id
   );
   if (idx === -1) {
     return NextResponse.json(
@@ -64,7 +66,7 @@ export async function DELETE(
 
   // Refuse the delete if items still reference this category.
   const inUse = DEMO_RESTAURANT.items.some(
-    (item) => item.category === params.id
+    (item) => item.category === id
   );
   if (inUse) {
     return NextResponse.json(

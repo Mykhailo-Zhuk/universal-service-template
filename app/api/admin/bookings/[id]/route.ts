@@ -7,9 +7,10 @@ import { BookingPatchSchema } from "@/lib/booking-schemas";
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const idx = BOOKINGS_STORE.findIndex((b) => b.id === params.id);
+  const { id } = await params;
+  const idx = BOOKINGS_STORE.findIndex((b) => b.id === id);
   if (idx === -1) {
     return NextResponse.json(
       { error: "Booking not found" },

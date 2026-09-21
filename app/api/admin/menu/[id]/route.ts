@@ -10,9 +10,10 @@ import {
  */
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const item = DEMO_RESTAURANT.items.find((i) => i.id === params.id);
+  const { id } = await params;
+  const item = DEMO_RESTAURANT.items.find((i) => i.id === id);
   if (!item) {
     return NextResponse.json({ error: "Item not found" }, { status: 404 });
   }
@@ -24,9 +25,10 @@ export async function GET(
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const idx = DEMO_RESTAURANT.items.findIndex((i) => i.id === params.id);
+  const { id } = await params;
+  const idx = DEMO_RESTAURANT.items.findIndex((i) => i.id === id);
   if (idx === -1) {
     return NextResponse.json({ error: "Item not found" }, { status: 404 });
   }
@@ -66,9 +68,10 @@ export async function PATCH(
  */
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const idx = DEMO_RESTAURANT.items.findIndex((i) => i.id === params.id);
+  const { id } = await params;
+  const idx = DEMO_RESTAURANT.items.findIndex((i) => i.id === id);
   if (idx === -1) {
     return NextResponse.json({ error: "Item not found" }, { status: 404 });
   }

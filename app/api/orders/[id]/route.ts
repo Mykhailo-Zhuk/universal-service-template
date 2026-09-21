@@ -7,9 +7,10 @@ import { OrderUpdateSchema } from "@/lib/schemas";
  */
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const order = DEMO_ORDERS.find((o) => o.id === params.id);
+  const { id } = await params;
+  const order = DEMO_ORDERS.find((o) => o.id === id);
   if (!order) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
@@ -23,9 +24,10 @@ export async function GET(
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const idx = DEMO_ORDERS.findIndex((o) => o.id === params.id);
+  const { id } = await params;
+  const idx = DEMO_ORDERS.findIndex((o) => o.id === id);
   if (idx === -1) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }

@@ -4,10 +4,11 @@ import { RestaurantSchema } from "@/lib/schemas";
 
 export async function GET(
   _request: Request,
-  { params }: { params: { restaurantId: string } }
+  { params }: { params: Promise<{ restaurantId: string }> }
 ) {
+  const { restaurantId } = await params;
   try {
-    if (params.restaurantId === DEMO_RESTAURANT.id) {
+    if (restaurantId === DEMO_RESTAURANT.id) {
       const validated = RestaurantSchema.parse(DEMO_RESTAURANT);
       return NextResponse.json(validated, {
         headers: {
