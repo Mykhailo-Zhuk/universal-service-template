@@ -1,6 +1,7 @@
 // eslint.config.mjs
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
   // Базові правила
@@ -8,6 +9,15 @@ export default [
 
   // TypeScript правила
   ...tseslint.configs.recommended,
+
+  // React Hooks (manually structured for flat config — guarantees correct plugin shape across plugin versions)
+  {
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  },
 
   // Загальні правила для Next.js
   {
