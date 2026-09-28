@@ -8,8 +8,6 @@ import {
   Phone,
   Hash,
   Loader2,
-  Volume2,
-  VolumeX,
   ChevronDown,
   Bell,
 } from "lucide-react";
@@ -57,7 +55,6 @@ export default function AdminOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">(
     "all"
   );
-  const [soundEnabled, setSoundEnabled] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const lastSeenIdsRef = useRef<Set<string>>(new Set());
 
@@ -69,7 +66,7 @@ export default function AdminOrdersPage() {
       const next = json.orders;
       setOrders(next);
 
-      // Detect new orders → toast + (optional) beep.
+      // Detect new orders → toast notification.
       const seen = lastSeenIdsRef.current;
       const fresh = next.filter((o) => !seen.has(o.id));
       if (seen.size > 0 && fresh.length > 0) {
@@ -82,7 +79,6 @@ export default function AdminOrdersPage() {
             } • ${formatPrice(o.total)}`,
           })),
         ]);
-        if (soundEnabled) playBeep();
       }
       next.forEach((o) => seen.add(o.id));
     } catch (err) {
@@ -90,7 +86,7 @@ export default function AdminOrdersPage() {
     } finally {
       setLoading(false);
     }
-  }, [soundEnabled]);
+  }, []);
 
   useEffect(() => {
     fetchOrders();
@@ -176,22 +172,6 @@ export default function AdminOrdersPage() {
             Live feed of all restaurant orders. Auto-refreshes every 5
             seconds.
           </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setSoundEnabled((v) => !v)}
-            aria-pressed={soundEnabled}
-          >
-            {soundEnabled ? (
-              <Volume2 className="h-4 w-4" />
-            ) : (
-              <VolumeX className="h-4 w-4" />
-            )}
-            {soundEnabled ? "Sound on" : "Sound off"}
-          </Button>
         </div>
       </header>
 
@@ -472,33 +452,4 @@ function OrderCard({
       </Card>
     </motion.div>
   );
-}
-
-/**
- * Plays a short beep via the Web Audio API.
- * No external file needed; AudioContext is lazy-initialised to comply with
- * browser autoplay policies (must be created after a user gesture).
- */
-function playBeep() {
-  try {
-    const Ctx =
-      window.AudioContext ||
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).webkitAudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.2);
-  } catch (err) {
-    console.warn("[playBeep]", err);
-  }
 }

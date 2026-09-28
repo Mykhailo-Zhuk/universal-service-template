@@ -87,15 +87,23 @@ export default function Home() {
           <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
             A clean, fast and customizable foundation for restaurants, salons, clinics, barbershops and any appointment-based business. QR menu, online booking, payments and a Telegram bot — all wired up and ready to adapt.
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Button asChild size="lg">
-              <Link href="/menu/demo-restaurant">
-                View Demo Menu
-                <ArrowRight className="h-4 w-4" />
+              <Link
+                href="/menu/demo-restaurant"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <span>View Demo Menu</span>
+                <ArrowRight className="h-4 w-4 shrink-0" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/admin">Open Admin Panel</Link>
+              <Link
+                href="/admin"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <span>Open Admin Panel</span>
+              </Link>
             </Button>
           </div>
         </motion.div>

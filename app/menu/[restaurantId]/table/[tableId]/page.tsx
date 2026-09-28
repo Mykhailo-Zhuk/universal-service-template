@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   AlertCircle,
@@ -38,10 +39,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn, formatPrice } from "@/lib/utils";
-
-type Props = {
-  params: { restaurantId: string; tableId: string };
-};
 
 // ── Cart shape ──────────────────────────────────────────────────────────
 type CartLine = {
@@ -71,7 +68,11 @@ function cartCount(cart: CartState): number {
   return Object.values(cart).reduce((sum, line) => sum + line.quantity, 0);
 }
 
-export default function TableLandingPage({ params }: Props) {
+export default function TableLandingPage() {
+  const { restaurantId, tableId } = useParams<{
+    restaurantId: string;
+    tableId: string;
+  }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,10 +89,11 @@ export default function TableLandingPage({ params }: Props) {
 
   // Load restaurant + menu.
   useEffect(() => {
+    if (!restaurantId) return;
     let cancelled = false;
     async function load() {
       try {
-        const res = await fetch(`/api/menu/${params.restaurantId}`);
+        const res = await fetch(`/api/menu/${restaurantId}`);
         if (!res.ok) throw new Error("Failed to load menu");
         const data: Restaurant = await res.json();
         if (cancelled) return;
@@ -109,7 +111,7 @@ export default function TableLandingPage({ params }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [params.restaurantId]);
+  }, [restaurantId]);
 
   const filteredItems = useMemo(() => {
     if (!restaurant || !activeCategory) return [];
@@ -180,8 +182,8 @@ export default function TableLandingPage({ params }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          restaurantId: params.restaurantId,
-          tableId: params.tableId,
+          restaurantId,
+          tableId,
           customerName: customerName.trim(),
           customerPhone: customerPhone.trim(),
           notes: orderNotes.trim() || undefined,
@@ -235,7 +237,7 @@ export default function TableLandingPage({ params }: Props) {
   const tableLabel =
     // The label is purely cosmetic — we never trust the URL to match a real
     // tableId, the API is the source of truth.
-    `Table #${params.tableId}`;
+    `Table #${tableId}`;
 
   // ── Success screen ────────────────────────────────────────────────────
   if (confirmedOrder) {

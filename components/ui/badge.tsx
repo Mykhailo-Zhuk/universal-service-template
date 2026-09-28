@@ -2,8 +2,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const Badge = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  HTMLSpanElement,
+  React.HTMLAttributes<HTMLSpanElement> & {
     variant?: "default" | "secondary" | "outline" | "success" | "warning";
   }
 >(({ className, variant = "default", ...props }, ref) => {
@@ -20,10 +20,10 @@ const Badge = React.forwardRef<
   };
 
   return (
-    <div
+    <span
       ref={ref}
       className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap transition-colors",
         variants[variant],
         className
       )}

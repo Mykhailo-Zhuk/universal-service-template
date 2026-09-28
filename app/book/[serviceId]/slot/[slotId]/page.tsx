@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -23,16 +24,16 @@ import {
 } from "@/lib/utils";
 import { generateSlotsForService, getSlotsByDate, getRelatedServices } from "@/lib/data-helpers";
 
-type Props = {
-  params: { serviceId: string; slotId: string };
-};
-
 type ApiResponse = {
   slot: ServiceSlot;
   service: Pick<Service, "id" | "name" | "duration" | "price" | "provider" | "masterName">;
 };
 
-export default function SlotDetailPage({ params }: Props) {
+export default function SlotDetailPage() {
+  const { serviceId, slotId } = useParams<{
+    serviceId: string;
+    slotId: string;
+  }>();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,18 +48,19 @@ export default function SlotDetailPage({ params }: Props) {
 
   // All slots for this service (for the week picker).
   const allSlots = useMemo(
-    () => generateSlotsForService(params.serviceId, 7),
-    [params.serviceId]
+    () => (serviceId ? generateSlotsForService(serviceId, 7) : []),
+    [serviceId]
   );
   const groupedSlots = useMemo(() => getSlotsByDate(allSlots), [allSlots]);
   const dates = useMemo(() => Object.keys(groupedSlots).sort(), [groupedSlots]);
 
   useEffect(() => {
+    if (!serviceId || !slotId) return;
     let cancelled = false;
     async function load() {
       try {
         const res = await fetch(
-          `/api/book/${params.serviceId}/slot/${params.slotId}`
+          `/api/book/${serviceId}/slot/${slotId}`
         );
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
@@ -78,7 +80,7 @@ export default function SlotDetailPage({ params }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [params.serviceId, params.slotId]);
+  }, [serviceId, slotId]);
 
   // Default: the slot we navigated to is pre-selected, otherwise first available.
   useEffect(() => {
@@ -118,7 +120,7 @@ export default function SlotDetailPage({ params }: Props) {
             {error || "This time slot may have expired."}
           </p>
           <Button asChild className="mt-6">
-            <Link href={`/book/${params.serviceId}`}>
+            <Link href={`/book/${serviceId}`}>
               <ArrowLeft className="h-4 w-4" />
               Pick another time
             </Link>
@@ -152,7 +154,7 @@ export default function SlotDetailPage({ params }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          serviceId: params.serviceId,
+          serviceId,
           customerName: form.customerName,
           customerPhone: form.customerPhone,
           date: activeSlot.date,
@@ -209,7 +211,7 @@ export default function SlotDetailPage({ params }: Props) {
       <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/book/${params.serviceId}`}>
+            <Link href={`/book/${serviceId}`}>
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>

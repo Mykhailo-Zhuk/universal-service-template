@@ -13,17 +13,18 @@ import { formatPrice, formatSlotDate } from "@/lib/utils";
 import { generateSlotsForService, getSlotsByDate } from "@/lib/data-helpers";
 
 export default function BookPage() {
-  const params = useParams<{ serviceId: string }>();
+  const { serviceId } = useParams<{ serviceId: string }>();
 
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!serviceId) return;
     let cancelled = false;
     async function load() {
       try {
-        const res = await fetch(`/api/book?serviceId=${params.serviceId}`);
+        const res = await fetch(`/api/book?serviceId=${serviceId}`);
         if (!res.ok) throw new Error("Service not found");
         const data = await res.json();
         if (!cancelled) setService(data.service);
@@ -39,7 +40,7 @@ export default function BookPage() {
     return () => {
       cancelled = true;
     };
-  }, [params.serviceId]);
+  }, [serviceId]);
 
   if (loading) {
     return (
@@ -64,7 +65,7 @@ export default function BookPage() {
     );
   }
 
-  const slots = generateSlotsForService(params.serviceId, 7);
+  const slots = serviceId ? generateSlotsForService(serviceId, 7) : [];
   const byDate = getSlotsByDate(slots);
   const dates = Object.keys(byDate).sort();
   const totalAvailable = slots.filter((s) => s.available).length;
@@ -150,7 +151,7 @@ export default function BookPage() {
                             key={s.id}
                             href={
                               s.available
-                                ? `/book/${params.serviceId}/slot/${s.id}`
+                                ? `/book/${serviceId}/slot/${s.id}`
                                 : "#"
                             }
                             aria-disabled={!s.available}

@@ -138,6 +138,17 @@ export default function AdminCategoriesPage() {
     load();
   }, [load]);
 
+  // Lock background scrolling while modal is open.
+  useEffect(() => {
+    if (showForm || confirm.open) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [showForm, confirm.open]);
+
   const openCreate = () => {
     setEditingId(null);
     setSlugTouched(false);
@@ -263,7 +274,8 @@ export default function AdminCategoriesPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
@@ -275,17 +287,17 @@ export default function AdminCategoriesPage() {
             {categories.length === 1 ? "y" : "ies"} total.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+          <div className="relative w-full sm:w-48">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-10 w-48 pl-9"
+              className="h-10 w-full pl-9"
             />
           </div>
-          <Button onClick={openCreate}>
+          <Button onClick={openCreate} className="w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             Add category
           </Button>
@@ -405,6 +417,7 @@ export default function AdminCategoriesPage() {
           </CardContent>
         </Card>
       )}
+      </div>
 
       {/* Form modal */}
       <AnimatePresence>
@@ -414,7 +427,7 @@ export default function AdminCategoriesPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 !m-0 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
             onClick={closeForm}
           >
             <motion.div
@@ -550,7 +563,7 @@ export default function AdminCategoriesPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 !m-0 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
             onClick={cancelDelete}
           >
             <motion.div
@@ -612,7 +625,7 @@ export default function AdminCategoriesPage() {
       <span className="hidden" aria-hidden>
         current-slug:{slugValue}
       </span>
-    </div>
+    </>
   );
 }
 

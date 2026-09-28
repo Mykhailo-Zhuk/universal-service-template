@@ -2,27 +2,27 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, MapPin, AlertCircle, ChevronRight } from "lucide-react";
+import { Phone, MapPin, AlertCircle, ChevronRight, ArrowLeft } from "lucide-react";
 import type { Restaurant } from "@/lib/schemas";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { formatPrice } from "@/lib/utils";
 
-type Props = {
-  params: { restaurantId: string };
-};
-
-export default function MenuPage({ params }: Props) {
+export default function MenuPage() {
+  const { restaurantId } = useParams<{ restaurantId: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!restaurantId) return;
     async function load() {
       try {
-        const res = await fetch(`/api/menu/${params.restaurantId}`);
+        const res = await fetch(`/api/menu/${restaurantId}`);
         if (!res.ok) throw new Error("Failed to load menu");
         const data = await res.json();
         setRestaurant(data);
@@ -36,7 +36,7 @@ export default function MenuPage({ params }: Props) {
       }
     }
     load();
-  }, [params.restaurantId]);
+  }, [restaurantId]);
 
   if (loading) {
     return (
@@ -53,6 +53,12 @@ export default function MenuPage({ params }: Props) {
           <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
           <h2 className="mt-4 text-xl font-semibold">Menu not found</h2>
           <p className="mt-2 text-muted-foreground">{error}</p>
+          <Button asChild className="mt-6">
+            <Link href="/">
+              <ArrowLeft className="h-4 w-4" />
+              Back to main page
+            </Link>
+          </Button>
         </div>
       </div>
     );
@@ -65,18 +71,27 @@ export default function MenuPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <header className="sticky top-0 z-20 glass border-b border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-          <div>
-            <h1 className="text-lg font-semibold">{restaurant.name}</h1>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3 w-3" />
-                {restaurant.address}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <Phone className="h-3 w-3" />
-                {restaurant.phone}
-              </span>
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button asChild variant="ghost" size="sm" className="-ml-2 shrink-0">
+              <Link href="/" aria-label="Go back to main page">
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden xs:inline sm:inline">Main page</span>
+              </Link>
+            </Button>
+            <div className="h-5 w-px bg-zinc-200 dark:bg-zinc-800" />
+            <div>
+              <h1 className="text-lg font-semibold">{restaurant.name}</h1>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="h-3 w-3" />
+                  {restaurant.address}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Phone className="h-3 w-3" />
+                  {restaurant.phone}
+                </span>
+              </div>
             </div>
           </div>
           <ThemeToggle />
@@ -139,7 +154,7 @@ export default function MenuPage({ params }: Props) {
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
               >
                 <Link
-                  href={`/menu/${params.restaurantId}/item/${item.id}`}
+                  href={`/menu/${restaurantId}/item/${item.id}`}
                   className={`group flex items-start justify-between gap-4 rounded-lg border border-zinc-200 bg-white p-4 transition-all hover:border-indigo-300 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-700 ${
                     !item.available ? "opacity-60" : ""
                   }`}

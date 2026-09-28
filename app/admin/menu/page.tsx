@@ -88,6 +88,17 @@ export default function AdminMenuPage() {
     load();
   }, [load]);
 
+  // Lock background scrolling while modal is open.
+  useEffect(() => {
+    if (showForm) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [showForm]);
+
   const openCreate = () => {
     setForm({
       ...EMPTY_FORM,
@@ -190,7 +201,8 @@ export default function AdminMenuPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
@@ -219,7 +231,7 @@ export default function AdminMenuPage() {
               <table className="w-full text-sm">
                 <thead className="border-b border-zinc-200 bg-zinc-50 text-left text-xs uppercase tracking-wider text-muted-foreground dark:border-zinc-800 dark:bg-zinc-900">
                   <tr>
-                    <th className="px-4 py-3">Item</th>
+                    <th className="min-w-[200px] px-4 py-3">Item</th>
                     <th className="px-4 py-3">Category</th>
                     <th className="px-4 py-3 text-right">Price</th>
                     <th className="px-4 py-3">Status</th>
@@ -236,18 +248,18 @@ export default function AdminMenuPage() {
                         key={item.id}
                         className="hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
                       >
-                        <td className="px-4 py-3">
+                        <td className="min-w-[200px] px-4 py-3">
                           <div className="font-medium">{item.name}</div>
                           <div className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                             {item.description}
                           </div>
                         </td>
-                        <td className="px-4 py-3">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium dark:bg-zinc-800">
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium whitespace-nowrap dark:bg-zinc-800">
                             {cat?.icon ?? "🍽"} {cat?.name ?? item.category}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right font-semibold tabular-nums">
+                        <td className="px-4 py-3 text-right font-semibold tabular-nums whitespace-nowrap">
                           {formatPrice(item.price)}
                         </td>
                         <td className="px-4 py-3">
@@ -299,6 +311,7 @@ export default function AdminMenuPage() {
           </CardContent>
         </Card>
       )}
+      </div>
 
       {/* Form modal */}
       <AnimatePresence>
@@ -308,7 +321,7 @@ export default function AdminMenuPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 !m-0 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
             onClick={closeForm}
           >
             <motion.div
@@ -481,22 +494,24 @@ export default function AdminMenuPage() {
                       </div>
                     </Field>
                     <Field label="Availability" className="sm:col-span-2">
-                      <label className="inline-flex cursor-pointer items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={form.available}
-                          onChange={(e) =>
-                            setForm({
-                              ...form,
-                              available: e.target.checked,
-                            })
-                          }
-                          className="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <span className="text-sm">
-                          Visible to customers
-                        </span>
-                      </label>
+                      <div className="pt-0.5">
+                        <label className="inline-flex cursor-pointer items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={form.available}
+                            onChange={(e) =>
+                              setForm({
+                                ...form,
+                                available: e.target.checked,
+                              })
+                            }
+                            className="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+                          />
+                          <span className="text-sm">
+                            Visible to customers
+                          </span>
+                        </label>
+                      </div>
                     </Field>
 
                     {error && (
@@ -530,7 +545,7 @@ export default function AdminMenuPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 
@@ -547,7 +562,7 @@ function Field({
 }) {
   return (
     <div className={cn("space-y-1.5", className)}>
-      <label className="text-sm font-medium">
+      <label className="block text-sm font-medium">
         {label}
         {required && <span className="ml-1 text-red-500">*</span>}
       </label>

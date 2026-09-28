@@ -4,8 +4,8 @@
  * Admin / Tables & QR (G-262)
  *
  * Lists every physical table in the venue, generates a QR code that points
- * at the public ordering URL, and lets the operator print or download the
- * sticker as PNG.
+ * at the public ordering URL, and lets the operator print, download, or
+ * toggle table availability (Active / Inactive).
  *
  * The base URL is taken from `window.location.origin` at runtime — that way
  * the same QR works in development (`http://localhost:3000`) and in
@@ -24,6 +24,8 @@ import {
   ExternalLink,
   Users,
   MapPin,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import {
   Card,
@@ -47,8 +49,57 @@ export default function AdminTablesPage() {
     setOrigin(window.location.origin);
   }, []);
 
-  const tables = useMemo<Table[]>(() => DEMO_TABLES, []);
+  const [tables, setTables] = useState<Table[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("admin_tables_state");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch {
+          // ignore corrupted data
+        }
+      }
+    }
+    return DEMO_TABLES;
+  });
+
+  const [filter, setFilter] = useState<"all" | "active" | "inactive">("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const toggleTableStatus = useCallback((tableId: string) => {
+    setTables((prev) => {
+      const next = prev.map((t) =>
+        t.id === tableId ? { ...t, active: !t.active } : t
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem("admin_tables_state", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setAllTablesActive = useCallback((active: boolean) => {
+    setTables((prev) => {
+      const next = prev.map((t) => ({ ...t, active }));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("admin_tables_state", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const activeCount = useMemo(
+    () => tables.filter((t) => t.active).length,
+    [tables]
+  );
+  const inactiveCount = tables.length - activeCount;
+
+  const filteredTables = useMemo(() => {
+    if (filter === "active") return tables.filter((t) => t.active);
+    if (filter === "inactive") return tables.filter((t) => !t.active);
+    return tables;
+  }, [tables, filter]);
 
   const tableUrl = useCallback(
     (tableId: string) =>
@@ -92,27 +143,93 @@ export default function AdminTablesPage() {
       </header>
 
       <Card className="print:hidden">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <QrCodeIcon className="h-4 w-4 text-indigo-500" />
-            {tables.length} tables ready
-          </CardTitle>
-          <CardDescription>
-            Each QR code is unique to its table — orders are automatically
-            associated with <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">{`<tableId>`}</code>{" "}
-            from the URL.
-          </CardDescription>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <QrCodeIcon className="h-4 w-4 text-indigo-500" />
+              {activeCount} of {tables.length} tables active
+            </CardTitle>
+            <CardDescription className="mt-1">
+              Toggle table status to open or close tables for ordering.
+            </CardDescription>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Filter buttons */}
+            <div className="inline-flex rounded-lg border border-zinc-200 bg-zinc-50 p-1 text-xs dark:border-zinc-800 dark:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setFilter("all")}
+                className={cn(
+                  "rounded-md px-2.5 py-1 font-medium transition-colors",
+                  filter === "all"
+                    ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                All ({tables.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter("active")}
+                className={cn(
+                  "rounded-md px-2.5 py-1 font-medium transition-colors",
+                  filter === "active"
+                    ? "bg-white text-emerald-700 shadow-sm dark:bg-zinc-800 dark:text-emerald-400"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Active ({activeCount})
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter("inactive")}
+                className={cn(
+                  "rounded-md px-2.5 py-1 font-medium transition-colors",
+                  filter === "inactive"
+                    ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Inactive ({inactiveCount})
+              </button>
+            </div>
+
+            {/* Quick bulk action */}
+            {inactiveCount > 0 ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setAllTablesActive(true)}
+                className="text-xs"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                Activate all
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setAllTablesActive(false)}
+                className="text-xs"
+              >
+                <XCircle className="h-3.5 w-3.5 text-zinc-500" />
+                Deactivate all
+              </Button>
+            )}
+          </div>
         </CardHeader>
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {tables.map((table) => (
+        {filteredTables.map((table) => (
           <TableQrCard
             key={table.id}
             table={table}
             url={tableUrl(table.id)}
             copied={copiedId === table.id}
             onCopy={() => copyLink(table.id)}
+            onToggleStatus={() => toggleTableStatus(table.id)}
           />
         ))}
       </div>
@@ -131,11 +248,13 @@ function TableQrCard({
   url,
   copied,
   onCopy,
+  onToggleStatus,
 }: {
   table: Table;
   url: string;
   copied: boolean;
   onCopy: () => void;
+  onToggleStatus: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -155,7 +274,12 @@ function TableQrCard({
   };
 
   return (
-    <Card className="overflow-hidden print:break-inside-avoid print:border-zinc-300">
+    <Card
+      className={cn(
+        "overflow-hidden transition-all print:break-inside-avoid print:border-zinc-300",
+        !table.active && "border-dashed opacity-80"
+      )}
+    >
       {/* Sticker header — only shown on print. */}
       <div className="hidden print:block print:px-4 print:pt-3">
         <div className="text-[10px] uppercase tracking-wider text-zinc-500">
@@ -165,27 +289,52 @@ function TableQrCard({
       </div>
 
       <CardHeader className="print:hidden">
-        <CardTitle className="flex items-center gap-2 text-base">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
-            {table.id}
-          </span>
-          {table.label}
-        </CardTitle>
-        <CardDescription className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-          <span className="inline-flex items-center gap-1">
-            <Users className="h-3 w-3" />
-            {table.seats} seats
-          </span>
-          {table.zone && (
-            <span className="inline-flex items-center gap-1">
-              <MapPin className="h-3 w-3" />
-              {table.zone}
-            </span>
-          )}
-          <Badge variant={table.active ? "success" : "secondary"}>
-            {table.active ? "Active" : "Inactive"}
-          </Badge>
-        </CardDescription>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
+                {table.id}
+              </span>
+              {table.label}
+            </CardTitle>
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+              <span className="inline-flex items-center gap-1">
+                <Users className="h-3 w-3" />
+                {table.seats} seats
+              </span>
+              {table.zone && (
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="h-3 w-3" />
+                  {table.zone}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Clickable Badge */}
+          <button
+            type="button"
+            onClick={onToggleStatus}
+            title={
+              table.active
+                ? "Click to deactivate table"
+                : "Click to activate table"
+            }
+            className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          >
+            <Badge variant={table.active ? "success" : "secondary"}>
+              <span className="inline-flex items-center gap-1.5">
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    table.active ? "bg-emerald-500" : "bg-zinc-400"
+                  )}
+                />
+                {table.active ? "Active" : "Inactive"}
+              </span>
+            </Badge>
+          </button>
+        </div>
       </CardHeader>
 
       <CardContent className="flex flex-col items-center gap-4 print:gap-2">
@@ -193,7 +342,8 @@ function TableQrCard({
         <div
           className={cn(
             "rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950",
-            "print:border-zinc-300 print:shadow-none"
+            "print:border-zinc-300 print:shadow-none",
+            !table.active && "grayscale opacity-70"
           )}
         >
           <QRCodeCanvas
@@ -225,6 +375,45 @@ function TableQrCard({
           {url}
         </code>
 
+        {/* Status switcher toggle */}
+        <div className="flex w-full items-center justify-between rounded-lg border border-zinc-100 bg-zinc-50/80 px-3 py-2 dark:border-zinc-800/80 dark:bg-zinc-900/40 print:hidden">
+          <span className="text-xs font-medium text-muted-foreground">
+            Status:{" "}
+            <strong
+              className={
+                table.active
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-zinc-500"
+              }
+            >
+              {table.active ? "Active" : "Inactive"}
+            </strong>
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={table.active}
+            onClick={onToggleStatus}
+            title={
+              table.active
+                ? "Table is active. Click to deactivate"
+                : "Table is inactive. Click to activate"
+            }
+            className={cn(
+              "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600",
+              table.active ? "bg-emerald-600" : "bg-zinc-300 dark:bg-zinc-700"
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className={cn(
+                "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+                table.active ? "translate-x-4" : "translate-x-0"
+              )}
+            />
+          </button>
+        </div>
+
         <div className="flex w-full gap-2 print:hidden">
           <Button
             variant="outline"
@@ -244,6 +433,7 @@ function TableQrCard({
               </>
             )}
           </Button>
+
           <Button
             variant="outline"
             size="sm"

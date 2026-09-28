@@ -219,6 +219,17 @@ export default function AdminBookingsPage() {
     return () => clearInterval(id);
   }, [fetchBookings]);
 
+  // Lock background scrolling while reschedule modal is open.
+  useEffect(() => {
+    if (resched.open) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [resched.open]);
+
   const filtered = useMemo(() => {
     return bookings.filter((b) => {
       if (!dateInRange(b.date, dateRange)) return false;
@@ -661,7 +672,7 @@ export default function AdminBookingsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 !m-0 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
             onClick={closeReschedule}
           >
             <motion.div

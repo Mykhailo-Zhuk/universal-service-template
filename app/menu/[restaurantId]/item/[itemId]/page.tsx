@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -24,16 +25,16 @@ import {
 } from "@/lib/utils";
 import { getRelatedItems } from "@/lib/data-helpers";
 
-type Props = {
-  params: { restaurantId: string; itemId: string };
-};
-
 type ApiResponse = {
   item: MenuItem;
   currency: string;
 };
 
-export default function ItemDetailPage({ params }: Props) {
+export default function ItemDetailPage() {
+  const { restaurantId, itemId } = useParams<{
+    restaurantId: string;
+    itemId: string;
+  }>();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,11 +42,12 @@ export default function ItemDetailPage({ params }: Props) {
   const [orderPlaced, setOrderPlaced] = useState(false);
 
   useEffect(() => {
+    if (!restaurantId || !itemId) return;
     let cancelled = false;
     async function load() {
       try {
         const res = await fetch(
-          `/api/menu/${params.restaurantId}/item/${params.itemId}`
+          `/api/menu/${restaurantId}/item/${itemId}`
         );
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
@@ -65,7 +67,7 @@ export default function ItemDetailPage({ params }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [params.restaurantId, params.itemId]);
+  }, [restaurantId, itemId]);
 
   const finalPrice = useMemo(() => {
     if (!data) return 0;
@@ -98,7 +100,7 @@ export default function ItemDetailPage({ params }: Props) {
             {error || "The dish you are looking for is no longer available."}
           </p>
           <Button asChild className="mt-6">
-            <Link href={`/menu/${params.restaurantId}`}>
+            <Link href={`/menu/${restaurantId}`}>
               <ArrowLeft className="h-4 w-4" />
               Back to menu
             </Link>
@@ -130,7 +132,7 @@ export default function ItemDetailPage({ params }: Props) {
           </p>
           <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <Button asChild>
-              <Link href={`/menu/${params.restaurantId}`}>
+              <Link href={`/menu/${restaurantId}`}>
                 Back to menu
               </Link>
             </Button>
@@ -155,7 +157,7 @@ export default function ItemDetailPage({ params }: Props) {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.25),_transparent_60%)]" />
         <div className="relative mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3">
           <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10">
-            <Link href={`/menu/${params.restaurantId}`}>
+            <Link href={`/menu/${restaurantId}`}>
               <ArrowLeft className="h-4 w-4" />
               Back to menu
             </Link>
@@ -368,7 +370,7 @@ export default function ItemDetailPage({ params }: Props) {
                   transition={{ delay: idx * 0.05 }}
                 >
                   <Link
-                    href={`/menu/${params.restaurantId}/item/${r.id}`}
+                    href={`/menu/${restaurantId}/item/${r.id}`}
                     className="group block rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
                   >
                     <div className="flex items-start justify-between gap-3">
