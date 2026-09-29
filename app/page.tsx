@@ -20,30 +20,30 @@ const ThemeToggle = dynamic(
 
 const features = [
   {
-    icon: QrCode,
-    title: "QR Menu",
-    description: "Beautiful digital menus accessible via QR code. Edit items, prices and availability in seconds.",
-    href: "/menu/demo-restaurant",
+    icon: CalendarDays,
+    title: "Онлайн-запис 24/7",
+    description: "Клієнт сам обирає послугу та зручний час — без дзвінків і черг.",
+    href: "/book/haircut-classic",
     color: "from-indigo-500 to-violet-500",
   },
   {
-    icon: CalendarDays,
-    title: "Online Booking",
-    description: "Self-service booking flow for any service. Real-time slot picking and instant confirmation.",
-    href: "/book/haircut-classic",
+    icon: Sparkles,
+    title: "Прайс і послуги",
+    description: "Актуальні ціни та перелік послуг — адміністратор редагує сам.",
+    href: "/menu/demo-restaurant",
     color: "from-emerald-500 to-teal-500",
   },
   {
     icon: CreditCard,
-    title: "Payments",
-    description: "LiqPay and MonoPay integrations built-in. Test the full flow with mock data.",
+    title: "Оплата онлайн",
+    description: "LiqPay та MonoPay — передоплата або повна оплата послуги.",
     href: "/admin",
     color: "from-amber-500 to-orange-500",
   },
   {
     icon: Bot,
-    title: "Telegram Bot",
-    description: "Webhook-driven bot ready to connect to your Telegram account. Send commands and log activity.",
+    title: "Telegram-сповіщення",
+    description: "Нова заявка — миттєве повідомлення адміністратору в Telegram.",
     href: "/admin",
     color: "from-sky-500 to-blue-500",
   },
@@ -59,7 +59,7 @@ export default function Home() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white">
             <Sparkles className="h-4 w-4" />
           </div>
-          <span>Universal Service Template</span>
+          <span>PRO.СТО</span>
         </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
@@ -80,12 +80,12 @@ export default function Home() {
             Next.js 14 · TypeScript · Tailwind · Zod
           </div>
           <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-6xl">
-            One template.
+            Запис онлайн.
             <br />
-            <span className="gradient-text">Any service business.</span>
+            <span className="gradient-text">Без дзвінків і черг.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-            A clean, fast and customizable foundation for restaurants, salons, clinics, barbershops and any appointment-based business. QR menu, online booking, payments and a Telegram bot — all wired up and ready to adapt.
+            PRO.СТО Львів — онлайн-запис на послугу за 30 секунд, панель адміністратора та нагадування клієнтам у Telegram.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Button asChild size="lg">
@@ -93,7 +93,7 @@ export default function Home() {
                 href="/menu/demo-restaurant"
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap"
               >
-                <span>View Demo Menu</span>
+                <span>Переглянути онлайн</span>
                 <ArrowRight className="h-4 w-4 shrink-0" />
               </Link>
             </Button>
@@ -102,7 +102,7 @@ export default function Home() {
                 href="/admin"
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap"
               >
-                <span>Open Admin Panel</span>
+                <span>Панель адміністратора</span>
               </Link>
             </Button>
           </div>
@@ -144,7 +144,7 @@ export default function Home() {
 
       <footer className="relative z-10 border-t border-zinc-200 py-8 text-center text-sm text-muted-foreground dark:border-zinc-800">
         <div className="mx-auto max-w-6xl px-6">
-          Built with Next.js 14 · MIT License ·{" "}
+          PRO.СТО Львів · вул. Богданівська 15, Львів{" "}
           <Link
             href="https://github.com/Mykhailo-Zhuk/universal-service-template"
             className="text-indigo-600 hover:underline dark:text-indigo-400"

@@ -10,15 +10,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Universal Service Template",
+  title: "PRO.СТО Львів",
   description:
-    "A modern, customizable template for restaurants, services, and bookings. QR menu, online booking, payments and admin panel.",
+    "Автосервіс PRO.СТО у Львові: ремонт та обслуговування авто, гарантія якості. Онлайн-запис і Telegram-бот.",
   keywords: ["restaurant", "booking", "QR menu", "Next.js", "template"],
   authors: [{ name: "Mykhailo Zhuk" }],
   openGraph: {
-    title: "Universal Service Template",
+    title: "PRO.СТО Львів",
     description:
-      "A modern, customizable template for restaurants, services, and bookings.",
+      "Автосервіс PRO.СТО у Львові: ремонт та обслуговування авто, гарантія якості. Онлайн-запис і Telegram-бот.",
     type: "website",
   },
 };
