@@ -10,15 +10,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Universal Service Template",
+  title: "Brado Brey — Барбершоп",
   description:
-    "A modern, customizable template for restaurants, services, and bookings. QR menu, online booking, payments and admin panel.",
+    "Мережа барбершопів Brado Brey: чоловічі стрижки, гоління, догляд за бородою. Онлайн-запис у 24 локаціях.",
   keywords: ["restaurant", "booking", "QR menu", "Next.js", "template"],
   authors: [{ name: "Mykhailo Zhuk" }],
   openGraph: {
-    title: "Universal Service Template",
+    title: "Brado Brey — Барбершоп",
     description:
-      "A modern, customizable template for restaurants, services, and bookings.",
+      "Мережа барбершопів Brado Brey: чоловічі стрижки, гоління, догляд за бородою. Онлайн-запис у 24 локаціях.",
     type: "website",
   },
 };

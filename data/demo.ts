@@ -2,21 +2,21 @@ import type { Restaurant, Service } from "@/lib/schemas";
 
 export const DEMO_RESTAURANT: Restaurant = {
   id: "demo-restaurant",
-  name: "Demo Restaurant",
+  name: "Brado Brey — Барбершоп",
   description:
-    "A modern European cuisine restaurant in the heart of the city. Farm-to-table ingredients, signature cocktails and a warm atmosphere.",
+    "Мережа барбершопів Brado Brey: чоловічі стрижки, гоління, догляд за бородою. Онлайн-запис у 24 локаціях.",
   logo: "/images/demo-logo.svg",
-  address: "Khreshchatyk St. 1, Kyiv, Ukraine",
-  phone: "+380 44 123 4567",
+  address: "вул. Захисників Маріуполя 89, Київ",
+  phone: "+380 63 078 30 06",
   currency: "UAH",
   categories: [
-    { id: "starters", name: "Starters", icon: "🥗" },
-    { id: "mains", name: "Main Courses", icon: "🍝" },
-    { id: "grill", name: "Grill & BBQ", icon: "🥩" },
-    { id: "pizza", name: "Pizza", icon: "🍕" },
-    { id: "desserts", name: "Desserts", icon: "🍰" },
-    { id: "drinks", name: "Drinks", icon: "🍷" },
-    { id: "cocktails", name: "Cocktails", icon: "🍸" },
+    { id: "starters", name: "Закуски", icon: "🥗" },
+    { id: "mains", name: "Основні страви", icon: "🍝" },
+    { id: "grill", name: "Гриль", icon: "🥩" },
+    { id: "pizza", name: "Піца", icon: "🍕" },
+    { id: "desserts", name: "Десерти", icon: "🍰" },
+    { id: "drinks", name: "Напої", icon: "🍷" },
+    { id: "cocktails", name: "Коктейлі", icon: "🍸" },
   ],
   items: [
     // Starters
