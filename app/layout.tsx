@@ -10,15 +10,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Universal Service Template",
+  title: "Сканди — Ресторан Бар",
   description:
-    "A modern, customizable template for restaurants, services, and bookings. QR menu, online booking, payments and admin panel.",
+    "Ресторан-бар Сканди в Одесі. Європейська, японська кухня, піца та доставка. Онлайн-меню за QR-кодом.",
   keywords: ["restaurant", "booking", "QR menu", "Next.js", "template"],
   authors: [{ name: "Mykhailo Zhuk" }],
   openGraph: {
-    title: "Universal Service Template",
+    title: "Сканди — Ресторан Бар",
     description:
-      "A modern, customizable template for restaurants, services, and bookings.",
+      "Ресторан-бар Сканди в Одесі. Європейська, японська кухня, піца та доставка. Онлайн-меню за QR-кодом.",
     type: "website",
   },
 };

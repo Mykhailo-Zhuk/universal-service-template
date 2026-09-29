@@ -21,19 +21,19 @@ const FAKE_MONOPAY_PRIVATE = "mp_demo_priv_0000000000";
 
 /** In-memory store — survives between requests in the same Next.js process. */
 const STORE: Settings = {
-  restaurantName: "Demo Restaurant",
-  address: "Khreshchatyk St. 1, Kyiv, Ukraine",
-  phone: "+380 44 123 4567",
-  email: "hello@demo-restaurant.com",
+  restaurantName: "Сканди — Ресторан Бар",
+  address: "вул. Дерибасівська 22А, Одеса",
+  phone: "+380 93 070 72 07",
+  email: "",
   currency: "UAH",
   workingHours: {
-    mon: { open: true, from: "09:00", to: "22:00" },
-    tue: { open: true, from: "09:00", to: "22:00" },
-    wed: { open: true, from: "09:00", to: "22:00" },
-    thu: { open: true, from: "09:00", to: "22:00" },
-    fri: { open: true, from: "09:00", to: "23:00" },
-    sat: { open: true, from: "10:00", to: "23:00" },
-    sun: { open: false, from: "10:00", to: "22:00" },
+    mon: { open: true, from: "11:00", to: "22:00" },
+    tue: { open: true, from: "11:00", to: "22:00" },
+    wed: { open: true, from: "11:00", to: "22:00" },
+    thu: { open: true, from: "11:00", to: "22:00" },
+    fri: { open: true, from: "11:00", to: "22:00" },
+    sat: { open: true, from: "11:00", to: "22:00" },
+    sun: { open: true, from: "11:00", to: "22:00" },
   },
   // Sensitive — present in the server store, returned to the client as `***masked***`.
   telegramBotToken: FAKE_TELEGRAM_TOKEN,
