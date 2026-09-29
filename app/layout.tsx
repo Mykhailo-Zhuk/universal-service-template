@@ -10,15 +10,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Universal Service Template",
+  title: "Girls Territory — Салон краси",
   description:
-    "A modern, customizable template for restaurants, services, and bookings. QR menu, online booking, payments and admin panel.",
+    "Салон краси Girls Territory: перукарські послуги, манікюр, педикюр, косметологія. Онлайн-запис 24/7.",
   keywords: ["restaurant", "booking", "QR menu", "Next.js", "template"],
   authors: [{ name: "Mykhailo Zhuk" }],
   openGraph: {
-    title: "Universal Service Template",
+    title: "Girls Territory — Салон краси",
     description:
-      "A modern, customizable template for restaurants, services, and bookings.",
+      "Салон краси Girls Territory: перукарські послуги, манікюр, педикюр, косметологія. Онлайн-запис 24/7.",
     type: "website",
   },
 };
