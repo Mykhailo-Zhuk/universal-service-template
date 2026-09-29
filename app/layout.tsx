@@ -10,15 +10,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Universal Service Template",
+  title: "Ресторан Одеса",
   description:
-    "A modern, customizable template for restaurants, services, and bookings. QR menu, online booking, payments and admin panel.",
+    "Ресторан європейської кухні «Одеса» в Києві. Сезонні страви, дитяче меню і винна карта. QR-меню та бронювання столика.",
   keywords: ["restaurant", "booking", "QR menu", "Next.js", "template"],
   authors: [{ name: "Mykhailo Zhuk" }],
   openGraph: {
-    title: "Universal Service Template",
+    title: "Ресторан Одеса",
     description:
-      "A modern, customizable template for restaurants, services, and bookings.",
+      "Ресторан європейської кухні «Одеса» в Києві. Сезонні страви, дитяче меню і винна карта. QR-меню та бронювання столика.",
     type: "website",
   },
 };
