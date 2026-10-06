@@ -59,7 +59,7 @@ export default function Home() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white">
             <Sparkles className="h-4 w-4" />
           </div>
-          <span>Одеса</span>
+          <span>Otaman</span>
         </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
@@ -85,7 +85,7 @@ export default function Home() {
             <span className="gradient-text">Завжди поруч.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-            Ресторан Одеса — цифрове меню за QR-кодом, бронювання столика та доставка. Все в одному місці, з телефона клієнта.
+            Otaman Resort — цифрове меню за QR-кодом, бронювання столика та доставка. Все в одному місці, з телефона гостя.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Button asChild size="lg">
@@ -144,7 +144,7 @@ export default function Home() {
 
       <footer className="relative z-10 border-t border-zinc-200 py-8 text-center text-sm text-muted-foreground dark:border-zinc-800">
         <div className="mx-auto max-w-6xl px-6">
-          Ресторан Одеса · вул. Велика Васильківська, 114, Київ{" "}
+          Otaman Resort · вул. Зелена (виїзд на Кільцеву дорогу), Львів{" "}
           <Link
             href="https://github.com/Mykhailo-Zhuk/universal-service-template"
             className="text-indigo-600 hover:underline dark:text-indigo-400"

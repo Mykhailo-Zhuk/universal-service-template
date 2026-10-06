@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Ресторан Одеса",
+  title: "Otaman Resort — ресторан у Львові",
   description:
-    "Ресторан європейської кухні «Одеса» в Києві. Сезонні страви, дитяче меню і винна карта. QR-меню та бронювання столика.",
+    "Ресторан Otaman Resort у Львові. Українська та європейська кухня, банкети, літня тераса, страви з мангалу. QR-меню та бронювання столика.",
   keywords: ["restaurant", "booking", "QR menu", "Next.js", "template"],
   authors: [{ name: "Mykhailo Zhuk" }],
   openGraph: {

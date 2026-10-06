@@ -21,10 +21,10 @@ const FAKE_MONOPAY_PRIVATE = "mp_demo_priv_0000000000";
 
 /** In-memory store — survives between requests in the same Next.js process. */
 const STORE: Settings = {
-  restaurantName: "Ресторан Одеса",
-  address: "вул. Велика Васильківська, 114, Київ",
-  phone: "+380 44 238 20 32",
-  email: "",
+  restaurantName: "Otaman Resort",
+  address: "вул. Зелена (виїзд на Кільцеву дорогу), Львів",
+  phone: "+380 67 605 51 59",
+  email: "otaman.resort@gmail.com",
   currency: "UAH",
   workingHours: {
     mon: { open: true, from: "11:00", to: "22:00" },

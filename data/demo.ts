@@ -2,12 +2,12 @@ import type { Restaurant, Service } from "@/lib/schemas";
 
 export const DEMO_RESTAURANT: Restaurant = {
   id: "demo-restaurant",
-  name: "Ресторан Одеса",
+  name: "Otaman Resort",
   description:
-    "Ресторан європейської кухні «Одеса» в Києві. Сезонні страви, дитяче меню і винна карта. QR-меню та бронювання столика.",
+    "Ресторан Otaman Resort у Львові. Українська та європейська кухня, банкети, літня тераса, страви з мангалу. QR-меню та бронювання столика.",
   logo: "/images/demo-logo.svg",
-  address: "вул. Велика Васильківська, 114, Київ",
-  phone: "+380 44 238 20 32",
+  address: "вул. Зелена (виїзд на Кільцеву дорогу), Львів",
+  phone: "+380 67 605 51 59",
   currency: "UAH",
   categories: [
     { id: "starters", name: "Закуски", icon: "🥗" },
