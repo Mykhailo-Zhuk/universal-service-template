@@ -14,15 +14,6 @@ export function formatPrice(amount: number, currency: string = "UAH"): string {
   }).format(amount);
 }
 
-export function formatDate(date: Date | string, locale: string = "uk-UA"): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(d);
-}
-
 export function generateId(prefix: string = "id"): string {
   return `${prefix}_${Math.random().toString(36).slice(2, 11)}_${Date.now().toString(36)}`;
 }
@@ -31,7 +22,7 @@ export function generateId(prefix: string = "id"): string {
  * Human-readable allergen labels.
  * Falls back to the raw code (title-cased) for unknown allergens.
  */
-export const ALLERGEN_LABELS: Record<string, string> = {
+const ALLERGEN_LABELS: Record<string, string> = {
   gluten: "Gluten",
   dairy: "Dairy",
   egg: "Egg",

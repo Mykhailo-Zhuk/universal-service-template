@@ -48,7 +48,7 @@ const STORE: Settings = {
  * Reveals the last 4 characters so the user can confirm what's stored
  * without leaking the whole token.
  */
-export function maskSecret(value: string | undefined): string {
+function maskSecret(value: string | undefined): string {
   if (!value) return "";
   if (value.length <= 4) return "•".repeat(value.length);
   return `••••••••${value.slice(-4)}`;

@@ -4,30 +4,38 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --border: #e4e4e7;
+  --foreground: #232323;
+  --surface: #f3f3f3;
+  --muted: #f3f3f3;
+  --muted-foreground: #595959;
+  --border: rgba(35, 35, 35, 0.12);
+  --border-strong: rgba(35, 35, 35, 0.24);
   --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  --primary: #4f46e5;
+  --card-foreground: #232323;
+  --primary: #232323;
   --primary-foreground: #ffffff;
-  --accent: #f4f4f5;
-  --accent-foreground: #0a0a0a;
+  --accent: #f3f3f3;
+  --accent-foreground: #232323;
+  --mint: #a1ffcb;
+  --mint-foreground: #232323;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --muted: #18181b;
-  --muted-foreground: #a1a1aa;
-  --border: #27272a;
-  --card: #0a0a0a;
-  --card-foreground: #fafafa;
-  --primary: #6366f1;
-  --primary-foreground: #ffffff;
-  --accent: #18181b;
-  --accent-foreground: #fafafa;
+  --background: #141414;
+  --foreground: #ffffff;
+  --surface: #1e1e1e;
+  --muted: #1e1e1e;
+  --muted-foreground: #a4a4a4;
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.28);
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --primary: #a1ffcb;
+  --primary-foreground: #232323;
+  --accent: #1e1e1e;
+  --accent-foreground: #ffffff;
+  --mint: #a1ffcb;
+  --mint-foreground: #232323;
 }
 
 * {
@@ -42,8 +50,7 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: var(--font-chivo), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -51,10 +58,10 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--muted);
+  background: var(--surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--border-strong);
   border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -64,20 +71,6 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-  .gradient-text {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-  .dark .glass {
-    background: rgba(10, 10, 10, 0.7);
   }
 }
 

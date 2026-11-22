@@ -32,6 +32,3 @@ export const BookingPatchSchema = z
       data.time !== undefined,
     { message: "At least one field must be provided" }
   );
-
-export type BookingPatch = z.infer<typeof BookingPatchSchema>;
-export type BookingStatus = (typeof BOOKING_STATUSES)[number];

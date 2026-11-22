@@ -34,3 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# taste-skill & fallow cache/artifacts
+/.taste-skill/
+/shots/
+/.fallow/

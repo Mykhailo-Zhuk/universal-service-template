@@ -17,10 +17,10 @@ export const ALLERGEN_CODES = [
   "sulphite",
 ] as const;
 
-export const AllergenSchema = z.enum(ALLERGEN_CODES);
+const AllergenSchema = z.enum(ALLERGEN_CODES);
 
 // Variation: optional size / portion / option for a menu item (e.g. Small / Medium / Large).
-export const ItemVariationSchema = z.object({
+const ItemVariationSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1).max(60),
   priceDelta: z.number().int(), // delta vs base price, may be negative or zero
@@ -170,17 +170,17 @@ export const ORDER_STATUSES = [
   "paid",
   "cancelled",
 ] as const;
-export const OrderStatusSchema = z.enum(ORDER_STATUSES);
+const OrderStatusSchema = z.enum(ORDER_STATUSES);
 
-export const PAYMENT_STATUSES = ["pending", "paid", "refunded", "failed"] as const;
-export const PaymentStatusSchema = z.enum(PAYMENT_STATUSES);
+const PAYMENT_STATUSES = ["pending", "paid", "refunded", "failed"] as const;
+const PaymentStatusSchema = z.enum(PAYMENT_STATUSES);
 
-export const PAYMENT_METHODS = ["cash", "card", "online", "liqpay", "monopay"] as const;
-export const PaymentMethodSchema = z.enum(PAYMENT_METHODS);
+const PAYMENT_METHODS = ["cash", "card", "online", "liqpay", "monopay"] as const;
+const PaymentMethodSchema = z.enum(PAYMENT_METHODS);
 
 // A single line inside an order. Snapshots the item's name and unit price so
 // historical orders stay meaningful even if the menu later changes.
-export const OrderItemSchema = z.object({
+const OrderItemSchema = z.object({
   itemId: z.string().min(1),
   name: z.string().min(1).max(120),
   price: z.number().nonnegative(),
@@ -251,15 +251,6 @@ export const OrderUpdateSchema = z
     { message: "At least one field must be provided" }
   );
 
-// Table schema — a physical table in the venue that customers can order from.
-export const TableSchema = z.object({
-  id: z.string().min(1).max(40),
-  label: z.string().min(1).max(40), // e.g. "Table #5"
-  seats: z.number().int().positive().default(2),
-  zone: z.string().optional(), // e.g. "Main hall", "Terrace"
-  active: z.boolean().default(true),
-});
-
 // Admin CRUD schemas — slightly looser than the public Zod schemas because
 // the admin is trusted and creates the IDs server-side.
 export const AdminMenuItemCreateSchema = MenuItemSchema.omit({ id: true }).extend({
@@ -274,23 +265,6 @@ export const AdminCategoryCreateSchema = MenuCategorySchema.omit({ id: true }).e
 
 export const AdminCategoryUpdateSchema = AdminCategoryCreateSchema.partial();
 
-// Admin settings payload (kept lightweight — this is a demo template).
-export const SettingsSchema = z.object({
-  name: z.string().min(1).max(120),
-  address: z.string().min(1).max(200),
-  phone: z.string().min(1).max(30),
-  email: z.string().email().optional().or(z.literal("")),
-  hours: z.string().min(1).max(200), // human-readable
-  currency: z.string().min(1).max(8).default("UAH"),
-  // Sensitive — never returned to the client in plain text. The route
-  // returns `***masked***` so the UI knows a value is set.
-  telegramBotToken: z.string().optional(),
-  liqpayPublicKey: z.string().optional(),
-  liqpayPrivateKey: z.string().optional(),
-  monopayPublicKey: z.string().optional(),
-  monopayPrivateKey: z.string().optional(),
-});
-
 export type MenuItem = z.infer<typeof MenuItemSchema>;
 export type MenuCategory = z.infer<typeof MenuCategorySchema>;
 export type Restaurant = z.infer<typeof RestaurantSchema>;
@@ -298,12 +272,14 @@ export type Service = z.infer<typeof ServiceSchema>;
 export type ItemVariation = z.infer<typeof ItemVariationSchema>;
 export type ServiceSlot = z.infer<typeof ServiceSlotSchema>;
 export type Booking = z.infer<typeof BookingSchema>;
-export type PaymentCreate = z.infer<typeof PaymentCreateSchema>;
-export type PaymentCallback = z.infer<typeof PaymentCallbackSchema>;
-export type OrderItem = z.infer<typeof OrderItemSchema>;
 export type Order = z.infer<typeof OrderSchema>;
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 export type PaymentStatus = z.infer<typeof PaymentStatusSchema>;
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
-export type Table = z.infer<typeof TableSchema>;
-export type Settings = z.infer<typeof SettingsSchema>;
+export type Table = {
+  id: string;
+  label: string;
+  seats: number;
+  zone?: string;
+  active: boolean;
+};

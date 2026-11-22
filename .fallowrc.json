@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "ignorePatterns": [
+    "public/**",
+    ".taste-skill/**"
+  ],
+  "duplicates": {
+    "minOccurrences": 2
+  },
+  "boundaries": {
+    "zones": [
+      { "name": "app", "patterns": ["app/**"] },
+      { "name": "components", "patterns": ["components/**"] },
+      { "name": "lib", "patterns": ["lib/**"] },
+      { "name": "data", "patterns": ["data/**"] }
+    ],
+    "rules": [
+      { "from": "lib", "allow": ["lib", "data"] },
+      { "from": "data", "allow": ["data", "lib"] },
+      { "from": "components", "allow": ["components", "lib", "data"] },
+      { "from": "app", "allow": ["app", "components", "lib", "data"] }
+    ]
+  },
+  "rules": {}
+}

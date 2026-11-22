@@ -12,15 +12,16 @@ import {
   CalendarCheck2,
   QrCode,
   Settings,
+  Menu,
   X,
 } from "lucide-react";
+import { BrandMark } from "@/components/brand-mark";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
   href: string;
   label: string;
   icon: typeof Activity;
-  // Exact-prefix matcher — used so /admin and /admin/orders both match.
   match: (pathname: string) => boolean;
 };
 
@@ -76,24 +77,26 @@ type SidebarContentProps = {
 
 function SidebarContent({ onNavigate, pathname }: SidebarContentProps) {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-background">
       <Link
         href="/admin"
         onClick={onNavigate}
-        className="flex items-center gap-2 px-6 py-5 text-lg font-semibold"
+        className="flex h-16 items-center gap-3 border-b border-border px-5"
       >
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white">
-          <Activity className="h-5 w-5" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#232323] text-[#a1ffcb] dark:bg-[#a1ffcb] dark:text-[#232323]">
+          <BrandMark size={18} />
         </div>
-        <div>
-          <div>Admin Panel</div>
-          <div className="text-xs font-normal text-muted-foreground">
+        <div className="min-w-0">
+          <div className="truncate text-sm font-medium tracking-[-0.01em] text-foreground">
+            Admin desk
+          </div>
+          <div className="truncate text-xs text-muted-foreground">
             Universal Service
           </div>
         </div>
       </Link>
 
-      <nav className="flex-1 space-y-1 px-3">
+      <nav aria-label="Admin navigation" className="flex-1 space-y-1 px-3 py-4">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = item.match(pathname);
@@ -103,26 +106,26 @@ function SidebarContent({ onNavigate, pathname }: SidebarContentProps) {
               href={item.href}
               onClick={onNavigate}
               className={cn(
-                "group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                "group relative flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium transition-colors",
                 active
-                  ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300"
-                  : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/60"
+                  ? "bg-surface text-foreground"
+                  : "text-muted-foreground hover:bg-surface hover:text-foreground"
               )}
             >
               <Icon
                 className={cn(
-                  "h-4 w-4",
+                  "h-4 w-4 shrink-0",
                   active
-                    ? "text-indigo-600 dark:text-indigo-400"
-                    : "text-zinc-500 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-300"
+                    ? "text-foreground"
+                    : "text-muted-foreground group-hover:text-foreground"
                 )}
               />
               <span>{item.label}</span>
               {active && (
                 <motion.span
                   layoutId="admin-active-indicator"
-                  className="absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-indigo-500"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+                  className="absolute right-3 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#a1ffcb] ring-1 ring-[#232323]/25"
+                  transition={{ duration: 0.2 }}
                 />
               )}
             </Link>
@@ -130,29 +133,23 @@ function SidebarContent({ onNavigate, pathname }: SidebarContentProps) {
         })}
       </nav>
 
-      <div className="border-t border-zinc-200 px-6 py-4 text-xs text-muted-foreground dark:border-zinc-800">
-        <div className="font-medium">Demo data</div>
-        <div className="mt-1">10 mock orders • 10 tables</div>
+      <div className="border-t border-border px-5 py-4 text-xs text-muted-foreground">
+        <div className="font-medium text-foreground">Demo Restaurant</div>
+        <div className="mt-0.5 font-mono text-[11px]">
+          10 tables · live workspace
+        </div>
       </div>
     </div>
   );
 }
 
 export function Sidebar() {
+  const pathname = usePathname();
   return (
-    <aside className="hidden w-64 shrink-0 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 lg:block">
-      <SidebarContent pathname={usePathnameHook()} />
+    <aside className="hidden w-64 shrink-0 border-r border-border bg-background lg:block">
+      <SidebarContent pathname={pathname} />
     </aside>
   );
-}
-
-/**
- * Hook wrapper so SidebarContent can be reused by the mobile drawer
- * (which needs the live pathname) without re-importing usePathname.
- */
-function usePathnameHook() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  return usePathname();
 }
 
 export function MobileNavToggle({
@@ -166,10 +163,10 @@ export function MobileNavToggle({
     <button
       type="button"
       onClick={onToggle}
-      className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-md border border-zinc-200 bg-white/90 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/90 lg:hidden"
+      className="fixed left-4 top-3 z-40 flex h-10 w-10 items-center justify-center rounded-[8px] border border-border bg-background text-foreground hover:bg-surface lg:hidden"
       aria-label={open ? "Close menu" : "Open menu"}
     >
-      {open ? <X className="h-5 w-5" /> : <span className="text-lg">☰</span>}
+      {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
     </button>
   );
 }
@@ -201,16 +198,16 @@ export function MobileNavDrawer({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
+            transition={{ duration: 0.16 }}
+            className="fixed inset-0 z-30 bg-black/45 lg:hidden"
             onClick={onClose}
           />
           <motion.aside
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            transition={{ type: "spring", bounce: 0.05, duration: 0.3 }}
-            className="fixed inset-y-0 left-0 z-40 w-72 border-r border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-950 lg:hidden"
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-y-0 left-0 z-40 w-72 border-r border-border bg-background lg:hidden"
           >
             <SidebarContent onNavigate={onClose} pathname={pathname} />
           </motion.aside>

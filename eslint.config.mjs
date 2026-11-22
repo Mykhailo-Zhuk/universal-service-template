@@ -61,6 +61,9 @@ export default [
       'dist/**',
       '.vercel/**',
       'next-env.d.ts',
+      'public/assets/**',
+      '.taste-skill/**',
+      'shots/**',
       '*.config.js',
       '*.config.mjs'
     ]

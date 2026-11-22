@@ -5,20 +5,21 @@ import {
   MenuCategorySchema,
 } from "@/lib/schemas";
 
+function findCategoryIndex(id: string): number {
+  return DEMO_RESTAURANT.categories.findIndex((c) => c.id === id);
+}
+
+function categoryNotFound() {
+  return NextResponse.json({ error: "Category not found" }, { status: 404 });
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const idx = DEMO_RESTAURANT.categories.findIndex(
-    (c) => c.id === id
-  );
-  if (idx === -1) {
-    return NextResponse.json(
-      { error: "Category not found" },
-      { status: 404 }
-    );
-  }
+  const idx = findCategoryIndex(id);
+  if (idx === -1) return categoryNotFound();
 
   try {
     const body = await request.json();
@@ -54,15 +55,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const idx = DEMO_RESTAURANT.categories.findIndex(
-    (c) => c.id === id
-  );
-  if (idx === -1) {
-    return NextResponse.json(
-      { error: "Category not found" },
-      { status: 404 }
-    );
-  }
+  const idx = findCategoryIndex(id);
+  if (idx === -1) return categoryNotFound();
 
   // Refuse the delete if items still reference this category.
   const inUse = DEMO_RESTAURANT.items.some(

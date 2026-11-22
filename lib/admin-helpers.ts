@@ -15,36 +15,36 @@ export const ORDER_STATUS_META: Record<
 > = {
   new: {
     label: "New",
-    tone: "bg-sky-100 text-sky-900 dark:bg-sky-950/60 dark:text-sky-300",
+    tone: "bg-[#232323] text-white dark:bg-white dark:text-[#232323]",
     description: "Just received, needs acceptance",
   },
   preparing: {
     label: "Preparing",
     tone:
-      "bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300",
+      "bg-amber-100 text-amber-950 dark:bg-amber-950/60 dark:text-amber-300",
     description: "Kitchen is working on it",
   },
   ready: {
     label: "Ready",
     tone:
-      "bg-violet-100 text-violet-900 dark:bg-violet-950/60 dark:text-violet-300",
+      "bg-[#a1ffcb] text-[#173324] dark:bg-[#a1ffcb]/20 dark:text-[#a1ffcb]",
     description: "Ready to serve",
   },
   served: {
     label: "Served",
     tone:
-      "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300",
+      "bg-emerald-100 text-emerald-950 dark:bg-emerald-950/60 dark:text-emerald-300",
     description: "Delivered to table",
   },
   paid: {
     label: "Paid",
     tone:
-      "bg-green-100 text-green-900 dark:bg-green-950/60 dark:text-green-300",
+      "bg-surface text-foreground border border-border",
     description: "Payment received",
   },
   cancelled: {
     label: "Cancelled",
-    tone: "bg-red-100 text-red-900 dark:bg-red-950/60 dark:text-red-300",
+    tone: "bg-red-100 text-red-950 dark:bg-red-950/60 dark:text-red-300",
     description: "Order was cancelled",
   },
 };
@@ -64,19 +64,19 @@ export const PAYMENT_STATUS_META: Record<
 > = {
   pending: {
     label: "Awaiting payment",
-    tone: "bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300",
+    tone: "bg-amber-100 text-amber-950 dark:bg-amber-950/60 dark:text-amber-300",
   },
   paid: {
     label: "Paid",
-    tone: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300",
+    tone: "bg-emerald-100 text-emerald-950 dark:bg-emerald-950/60 dark:text-emerald-300",
   },
   refunded: {
     label: "Refunded",
-    tone: "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100",
+    tone: "bg-surface text-foreground border border-border",
   },
   failed: {
     label: "Payment failed",
-    tone: "bg-red-100 text-red-900 dark:bg-red-950/60 dark:text-red-300",
+    tone: "bg-red-100 text-red-950 dark:bg-red-950/60 dark:text-red-300",
   },
 };
 
@@ -84,11 +84,11 @@ export const PAYMENT_METHOD_META: Record<
   PaymentMethod,
   { label: string; icon: string }
 > = {
-  cash: { label: "Cash", icon: "💵" },
-  card: { label: "Card on delivery", icon: "💳" },
-  online: { label: "Online", icon: "🌐" },
-  liqpay: { label: "LiqPay", icon: "🟡" },
-  monopay: { label: "MonoPay", icon: "⚫" },
+  cash: { label: "Cash", icon: "Cash" },
+  card: { label: "Card on delivery", icon: "Card" },
+  online: { label: "Online", icon: "Online" },
+  liqpay: { label: "LiqPay", icon: "LiqPay" },
+  monopay: { label: "MonoPay", icon: "MonoPay" },
 };
 
 /** Helper: short human format for "5 min ago" / "2 h ago" / "Yesterday". */

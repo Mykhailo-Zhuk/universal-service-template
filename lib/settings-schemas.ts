@@ -16,13 +16,12 @@ import { z } from "zod";
 // Working hours
 // ---------------------------------------------------------------------------
 
-export const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
-export type DayKey = (typeof DAY_KEYS)[number];
+export type DayKey = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
 
 const HHMM = /^\d{2}:\d{2}$/;
 
 /** Time range for one day. `from` must be strictly earlier than `to`. */
-export const WorkingHoursEntrySchema = z
+const WorkingHoursEntrySchema = z
   .object({
     open: z.boolean(),
     from: z.string().regex(HHMM, "Use HH:MM"),
@@ -33,7 +32,7 @@ export const WorkingHoursEntrySchema = z
     { message: "Close time must be after open time", path: ["to"] }
   );
 
-export const WorkingHoursSchema = z.object({
+const WorkingHoursSchema = z.object({
   mon: WorkingHoursEntrySchema,
   tue: WorkingHoursEntrySchema,
   wed: WorkingHoursEntrySchema,
@@ -47,7 +46,7 @@ export const WorkingHoursSchema = z.object({
 // Settings (full server-side shape, includes real secrets)
 // ---------------------------------------------------------------------------
 
-export const SettingsSchema = z.object({
+const SettingsSchema = z.object({
   restaurantName: z.string().min(1, "Name is required").max(120),
   address: z.string().min(1, "Address is required").max(200),
   phone: z
