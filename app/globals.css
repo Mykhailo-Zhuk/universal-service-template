@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  --font-chivo: "Chivo";
+  --font-chivo-mono: "Chivo Mono";
   --background: #ffffff;
   --foreground: #232323;
   --surface: #f3f3f3;

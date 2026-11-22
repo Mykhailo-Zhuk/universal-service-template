@@ -1,21 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Chivo, Chivo_Mono } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-
-const chivo = Chivo({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-chivo",
-  display: "swap",
-});
-
-const chivoMono = Chivo_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-chivo-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Universal Service Template",
@@ -48,9 +33,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${chivo.variable} ${chivoMono.variable} font-sans antialiased bg-background text-foreground selection:bg-[#a1ffcb] selection:text-[#232323]`}
-      >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..700&family=Chivo+Mono:wght@400..500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="font-sans antialiased bg-background text-foreground selection:bg-[#a1ffcb] selection:text-[#232323]">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
